@@ -34,10 +34,10 @@ jobs:
         shell: bash
     steps:
       - uses: actions/checkout@v4
-      - name: set up adopt jdk 17
+      - name: set up temurin jdk 17
         uses: actions/setup-java@v3
         with:
-          distribution: 'adopt'
+          distribution: 'temurin'
           java-version: '17'
       - name: prerequisites
         run: |
@@ -50,8 +50,7 @@ jobs:
           unzip -q -o ndk.zip -d .ndk
           echo "ANDROID_NDK_ROOT=$PWD/.ndk/android-ndk-r23c" >> $GITHUB_ENV
       - name: run the build script
-        run: ./android.sh -d --enable-lame --enable-opus --disable-arm-v7a \
-          --disable-lib-x264 --disable-lib-x265 --disable-lib-vpx --disable-lib-xvidcore --disable-lib-theora --disable-lib-openh264 --disable-lib-dav1d
+        run: ./android.sh -d --enable-lame --disable-arm-v7a
       - name: prepare and upload main aar
         run: |
           AAR_PATH=$(find prebuilt -type f -name 'ffmpeg-kit.aar')
@@ -80,10 +79,10 @@ jobs:
         shell: bash
     steps:
       - uses: actions/checkout@v4
-      - name: set up adopt jdk 17
+      - name: set up temurin jdk 17
         uses: actions/setup-java@v3
         with:
-          distribution: 'adopt'
+          distribution: 'temurin'
           java-version: '17'
       - name: prerequisites
         run: |
@@ -96,8 +95,7 @@ jobs:
           unzip -q -o ndk.zip -d .ndk
           echo "ANDROID_NDK_ROOT=$PWD/.ndk/android-ndk-r23c" >> $GITHUB_ENV
       - name: run the build script
-        run: ./android.sh -d --lts --enable-lame --enable-opus --disable-arm-v7a \
-          --disable-lib-x264 --disable-lib-x265 --disable-lib-vpx --disable-lib-xvidcore --disable-lib-theora --disable-lib-openh264 --disable-lib-dav1d
+        run: ./android.sh -d --lts --enable-lame --disable-arm-v7a
       - name: prepare and upload lts aar
         run: |
           AAR_PATH=$(find prebuilt -type f -name 'ffmpeg-kit.aar')
