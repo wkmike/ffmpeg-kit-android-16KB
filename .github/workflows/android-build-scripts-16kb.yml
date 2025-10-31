@@ -49,6 +49,8 @@ jobs:
           wget https://dl.google.com/android/repository/android-ndk-r23c-linux.zip -O ndk.zip
           unzip -q -o ndk.zip -d .ndk
           echo "ANDROID_NDK_ROOT=$PWD/.ndk/android-ndk-r23c" >> $GITHUB_ENV
+      - name: ensure license dir
+        run: mkdir -p android/ffmpeg-kit-android-lib/src/main/res/raw
       - name: run the build script
         run: ./android.sh -d --enable-lame --disable-arm-v7a
       - name: prepare and upload main aar
@@ -94,6 +96,8 @@ jobs:
           wget https://dl.google.com/android/repository/android-ndk-r23c-linux.zip -O ndk.zip
           unzip -q -o ndk.zip -d .ndk
           echo "ANDROID_NDK_ROOT=$PWD/.ndk/android-ndk-r23c" >> $GITHUB_ENV
+      - name: ensure license dir
+        run: mkdir -p android/ffmpeg-kit-android-lib/src/main/res/raw
       - name: run the build script
         run: ./android.sh -d --lts --enable-lame --disable-arm-v7a
       - name: prepare and upload lts aar
