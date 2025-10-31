@@ -44,11 +44,11 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libmp3lame-dev
           ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager --uninstall "cmake;3.10.2.4988404" "cmake;3.18.1"
-      - name: set up android ndk r25 (16k support)
+      - name: set up android ndk r25c
         run: |
-          curl -L -s "https://storage.googleapis.com/android-build/builds/aosp-ndk-release-r23-linux-linux/12186248/38c84da1ab0dd31ea40c857d2c9ee77450d9d71d76e60ac2ccd33d379babc534/android-ndk-12186248-linux.zip" -o ndk.zip
+          wget https://dl.google.com/android/repository/android-ndk-r25c-linux.zip -O ndk.zip
           unzip -q -o ndk.zip -d .ndk
-          echo "ANDROID_NDK_ROOT=$PWD/.ndk/$(ls .ndk)" >> $GITHUB_ENV
+          echo "ANDROID_NDK_ROOT=$PWD/.ndk/android-ndk-r25c" >> $GITHUB_ENV
       - name: run the build script
         run: ./android.sh -d --full --enable-gpl --enable-libmp3lame --disable-arm-v7a
       - name: prepare and upload main aar
