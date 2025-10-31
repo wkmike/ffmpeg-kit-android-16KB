@@ -46,7 +46,7 @@ jobs:
           ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager --uninstall "cmake;3.10.2.4988404" "cmake;3.18.1"
       - name: set up android ndk r23 (16k support)
         run: |
-          wget https://storage.googleapis.com/android-build/builds/aosp-ndk-release-r23-linux-linux/12186248/38c84da1ab0dd31ea40c857d2c9ee77450d9d71d76e60ac2ccd33d379babc534/android-ndk-12186248-linux-x86_64.zip?GoogleAccessId=gcs-sign%40android-builds-project.google.com.iam.gserviceaccount.com&Expires=1761892384&Signature=kMkUsBb0xA5vu91vzcKQkdTV2G89lnTg9XzBM%2FtmVurEDbItLkfbROlfU9%2BMZmP8v6ofxW40KbkZ6fYwEaGqiqbDZMCPov264W5oHuAvu48ogZrNQCW42sTtVLApIpzaD5N7UV0rqGcbBDmqvoC2KKtqkenDRrsA5Ev7zMQdCzqJotXg9TvfYMPt3TUKMRgF%2B11mOnPkQ2ULfmR9oZX10Yp2sdEDRJC3t28eMRRcHbFmrLPplLLDMzCBM8i4ZeQ64CVnQxGyOkZGSxKDNOZUildlNgFWwElL5PudPeEZDQSDqfU9BrgB68oFMN17kk0zMD3EXNdXayCfP7gYbDGmqQ%3D%3D&response-content-disposition=attachment -O ndk.zip
+          wget https://dl.google.com/android/repository/android-ndk-r23c-linux.zip -O ndk.zip
           unzip -q -o ndk.zip -d .ndk
           echo "ANDROID_NDK_ROOT=$PWD/.ndk/android-ndk-r23c" >> $GITHUB_ENV
       - name: run the build script
@@ -91,7 +91,7 @@ jobs:
           ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager --uninstall "cmake;3.10.2.4988404" "cmake;3.18.1"
       - name: set up android ndk r23 (16k support)
         run: |
-          wget https://storage.googleapis.com/android-build/builds/aosp-ndk-release-r23-linux-linux/12186248/38c84da1ab0dd31ea40c857d2c9ee77450d9d71d76e60ac2ccd33d379babc534/android-ndk-12186248-linux-x86_64.zip?GoogleAccessId=gcs-sign%40android-builds-project.google.com.iam.gserviceaccount.com&Expires=1761892384&Signature=kMkUsBb0xA5vu91vzcKQkdTV2G89lnTg9XzBM%2FtmVurEDbItLkfbROlfU9%2BMZmP8v6ofxW40KbkZ6fYwEaGqiqbDZMCPov264W5oHuAvu48ogZrNQCW42sTtVLApIpzaD5N7UV0rqGcbBDmqvoC2KKtqkenDRrsA5Ev7zMQdCzqJotXg9TvfYMPt3TUKMRgF%2B11mOnPkQ2ULfmR9oZX10Yp2sdEDRJC3t28eMRRcHbFmrLPplLLDMzCBM8i4ZeQ64CVnQxGyOkZGSxKDNOZUildlNgFWwElL5PudPeEZDQSDqfU9BrgB68oFMN17kk0zMD3EXNdXayCfP7gYbDGmqQ%3D%3D&response-content-disposition=attachment -O ndk.zip
+          wget https://dl.google.com/android/repository/android-ndk-r23c-linux.zip -O ndk.zip
           unzip -q -o ndk.zip -d .ndk
           echo "ANDROID_NDK_ROOT=$PWD/.ndk/android-ndk-r23c" >> $GITHUB_ENV
       - name: run the build script
