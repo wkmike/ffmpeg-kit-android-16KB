@@ -42,7 +42,7 @@ jobs:
       - name: prerequisites
         run: |
           sudo apt-get update
-          sudo apt-get install -y autoconf automake libtool pkg-config curl git doxygen nasm cmake gcc gperf texinfo yasm bison autogen wget autopoint meson ninja-build ragel groff gtk-doc-tools libtasn1-6 libtasn1-6-dev gcc-multilib g++-multilib
+          sudo apt-get install -y autoconf automake libtool pkg-config curl git doxygen nasm cmake gcc gperf texinfo yasm bison autogen wget autopoint meson ninja-build ragel groff gtk-doc-tools libtasn1-6 libtasn1-6-dev libtasn1-bin gcc-multilib g++-multilib
           ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager --uninstall "cmake;3.10.2.4988404" "cmake;3.18.1"
       - name: set up android ndk r23 (16k support)
         run: |
@@ -50,7 +50,8 @@ jobs:
           unzip -q -o ndk.zip -d .ndk
           echo "ANDROID_NDK_ROOT=$PWD/.ndk/android-ndk-r23c" >> $GITHUB_ENV
       - name: run the build script
-        run: ./android.sh -d --full --enable-gpl --enable-lame --disable-arm-v7a
+        run: ./android.sh -d --enable-lame --enable-opus --enable-vorbis --disable-arm-v7a \
+          --disable-lib-x264 --disable-lib-x265 --disable-lib-vpx --disable-lib-xvidcore --disable-lib-theora --disable-lib-openh264 --disable-lib-dav1d
       - name: prepare and upload main aar
         run: |
           AAR_PATH=$(find prebuilt -type f -name 'ffmpeg-kit.aar')
@@ -87,7 +88,7 @@ jobs:
       - name: prerequisites
         run: |
           sudo apt-get update
-          sudo apt-get install -y autoconf automake libtool pkg-config curl git doxygen nasm cmake gcc gperf texinfo yasm bison autogen wget autopoint meson ninja-build ragel groff gtk-doc-tools libtasn1-6 libtasn1-6-dev gcc-multilib g++-multilib
+          sudo apt-get install -y autoconf automake libtool pkg-config curl git doxygen nasm cmake gcc gperf texinfo yasm bison autogen wget autopoint meson ninja-build ragel groff gtk-doc-tools libtasn1-6 libtasn1-6-dev libtasn1-bin gcc-multilib g++-multilib
           ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager --uninstall "cmake;3.10.2.4988404" "cmake;3.18.1"
       - name: set up android ndk r23 (16k support)
         run: |
@@ -95,7 +96,8 @@ jobs:
           unzip -q -o ndk.zip -d .ndk
           echo "ANDROID_NDK_ROOT=$PWD/.ndk/android-ndk-r23c" >> $GITHUB_ENV
       - name: run the build script
-        run: ./android.sh -d --lts --full --enable-gpl --enable-lame --disable-arm-v7a
+        run: ./android.sh -d --lts --enable-lame --enable-opus --enable-vorbis --disable-arm-v7a \
+          --disable-lib-x264 --disable-lib-x265 --disable-lib-vpx --disable-lib-xvidcore --disable-lib-theora --disable-lib-openh264 --disable-lib-dav1d
       - name: prepare and upload lts aar
         run: |
           AAR_PATH=$(find prebuilt -type f -name 'ffmpeg-kit.aar')
