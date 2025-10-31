@@ -50,7 +50,7 @@ jobs:
           unzip -q -o ndk.zip -d .ndk
           echo "ANDROID_NDK_ROOT=$PWD/.ndk/android-ndk-r25c" >> $GITHUB_ENV
       - name: run the build script
-        run: ./android.sh -d --full --enable-gpl --enable-libmp3lame --disable-arm-v7a
+        run: ./android.sh -d --full --enable-gpl --enable-lame --disable-arm-v7a
       - name: prepare and upload main aar
         run: |
           AAR_PATH=$(find prebuilt -type f -name 'ffmpeg-kit.aar')
@@ -95,7 +95,7 @@ jobs:
           unzip -q -o ndk.zip -d .ndk
           echo "ANDROID_NDK_ROOT=$PWD/.ndk/$(ls .ndk)" >> $GITHUB_ENV
       - name: run the build script
-        run: ./android.sh -d --lts --full --enable-gpl --enable-libmp3lame --disable-arm-v7a
+        run: ./android.sh -d --lts --full --enable-gpl --enable-lame --disable-arm-v7a
       - name: prepare and upload lts aar
         run: |
           AAR_PATH=$(find prebuilt -type f -name 'ffmpeg-kit.aar')
