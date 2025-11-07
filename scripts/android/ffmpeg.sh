@@ -436,9 +436,16 @@ fi
   --enable-pic \
   --enable-jni \
   --enable-optimizations \
-  --enable-swscale \
+  --disable-swscale \
   ${BUILD_LIBRARY_OPTIONS} \
   --enable-pthreads \
+  --disable-everything \
+  --enable-demuxer=pcm_s16le,pcm_s16be,pcm_u16le,pcm_u16be,pcm_s8,pcm_u8,pcm_mulaw,pcm_alaw,wav,mp3,concat \
+  --enable-muxer=pcm_s16le,pcm_s16be,pcm_u16le,pcm_u16be,pcm_s8,pcm_u8,pcm_mulaw,pcm_alaw,wav,mp3 \
+  --enable-decoder=pcm_s16le,pcm_s16be,pcm_u16le,pcm_u16be,pcm_s8,pcm_u8,pcm_mulaw,pcm_alaw,mp3 \
+  --enable-encoder=pcm_s16le,pcm_s16be,pcm_u16le,pcm_u16be,pcm_s8,pcm_u8,pcm_mulaw,pcm_alaw,libmp3lame \
+  --enable-parser=mp3 \
+  --enable-filter=atrim,asetpts,concat,amix,amerge \
   --enable-v4l2-m2m \
   --disable-outdev=fbdev \
   --disable-indev=fbdev \
