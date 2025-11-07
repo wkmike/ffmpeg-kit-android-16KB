@@ -79,7 +79,6 @@
 
 #include "config.h"
 #include "libavformat/avformat.h"
-#include "libswscale/swscale.h"
 #include "libswresample/swresample.h"
 #include "libavutil/avassert.h"
 #include "libavutil/avstring.h"
@@ -105,7 +104,6 @@
 __thread char *program_name;
 __thread int program_birth_year;
 
-__thread AVDictionary *sws_dict;
 __thread AVDictionary *swr_opts;
 __thread AVDictionary *format_opts, *codec_opts;
 
@@ -115,7 +113,6 @@ __thread int longjmp_value = 0;
 void uninit_opts(void)
 {
     av_dict_free(&swr_opts);
-    av_dict_free(&sws_dict);
     av_dict_free(&format_opts);
     av_dict_free(&codec_opts);
 }
@@ -574,9 +571,6 @@ int opt_default(void *optctx, const char *opt, const char *arg)
     char opt_stripped[128];
     const char *p;
     const AVClass *cc = avcodec_get_class(), *fc = avformat_get_class();
-#if CONFIG_SWSCALE
-    const AVClass *sc = sws_get_class();
-#endif
 #if CONFIG_SWRESAMPLE
     const AVClass *swr_class = swr_get_class();
 #endif
@@ -602,25 +596,6 @@ int opt_default(void *optctx, const char *opt, const char *arg)
             av_log(NULL, AV_LOG_VERBOSE, "Routing option %s to both codec and muxer layer\n", opt);
         consumed = 1;
     }
-#if CONFIG_SWSCALE
-    if (!consumed && (o = opt_find(&sc, opt, NULL, 0,
-                         AV_OPT_SEARCH_CHILDREN | AV_OPT_SEARCH_FAKE_OBJ))) {
-        if (!strcmp(opt, "srcw") || !strcmp(opt, "srch") ||
-            !strcmp(opt, "dstw") || !strcmp(opt, "dsth") ||
-            !strcmp(opt, "src_format") || !strcmp(opt, "dst_format")) {
-            av_log(NULL, AV_LOG_ERROR, "Directly using swscale dimensions/format options is not supported, please use the -s or -pix_fmt options\n");
-            return AVERROR(EINVAL);
-        }
-        av_dict_set(&sws_dict, opt, arg, FLAGS);
-
-        consumed = 1;
-    }
-#else
-    if (!consumed && !strcmp(opt, "sws_flags")) {
-        av_log(NULL, AV_LOG_WARNING, "Ignoring %s %s, due to disabled swscale\n", opt, arg);
-        consumed = 1;
-    }
-#endif
 #if CONFIG_SWRESAMPLE
     if (!consumed && (o=opt_find(&swr_class, opt, NULL, 0,
                                     AV_OPT_SEARCH_CHILDREN | AV_OPT_SEARCH_FAKE_OBJ))) {
@@ -671,14 +646,12 @@ static void finish_group(OptionParseContext *octx, int group_idx,
     *g             = octx->cur_group;
     g->arg         = arg;
     g->group_def   = l->group_def;
-    g->sws_dict    = sws_dict;
     g->swr_opts    = swr_opts;
     g->codec_opts  = codec_opts;
     g->format_opts = format_opts;
 
     codec_opts  = NULL;
     format_opts = NULL;
-    sws_dict    = NULL;
     swr_opts    = NULL;
 
     memset(&octx->cur_group, 0, sizeof(octx->cur_group));
@@ -731,7 +704,6 @@ void uninit_parse_context(OptionParseContext *octx)
             av_dict_free(&l->groups[j].codec_opts);
             av_dict_free(&l->groups[j].format_opts);
 
-            av_dict_free(&l->groups[j].sws_dict);
             av_dict_free(&l->groups[j].swr_opts);
         }
         av_freep(&l->groups);

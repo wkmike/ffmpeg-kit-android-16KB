@@ -683,7 +683,6 @@ typedef struct OutputStream {
     char *filters_script;  ///< filtergraph script associated to the -filter_script option
 
     AVDictionary *encoder_opts;
-    AVDictionary *sws_dict;
     AVDictionary *swr_opts;
     char *apad;
     OSTFinished finished;        /* no more packets should be written for this stream */
