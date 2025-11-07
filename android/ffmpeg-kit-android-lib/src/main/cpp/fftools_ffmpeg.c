@@ -4873,7 +4873,7 @@ int ffmpeg_execute(int argc, char **argv)
         parse_loglevel(argc, argv, options);
 
     #if CONFIG_AVDEVICE
-        avdevice_register_all();
+        // avdevice_register_all();
     #endif
         avformat_network_init();
 
