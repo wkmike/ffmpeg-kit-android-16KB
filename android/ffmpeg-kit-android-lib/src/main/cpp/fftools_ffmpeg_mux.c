@@ -711,7 +711,6 @@ static void ost_free(OutputStream **post)
     ost->audio_channels_mapped = 0;
 #endif
 
-    av_dict_free(&ost->sws_dict);
     av_dict_free(&ost->swr_opts);
 
     if (ost->enc_ctx)

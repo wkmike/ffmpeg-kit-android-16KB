@@ -95,14 +95,12 @@
 #include "libavutil/pixdesc.h"
 #include "libavutil/pixfmt.h"
 
-const char *const opt_name_codec_names[]                      = {"c", "codec", "acodec", "vcodec", "scodec", "dcodec", NULL};
+const char *const opt_name_codec_names[]                      = {"c", "codec", "acodec", "dcodec", NULL};
 const char *const opt_name_frame_rates[]                      = {"r", NULL};
 const char *const opt_name_codec_tags[]                       = {"tag", "atag", "vtag", "stag", NULL};
-const char *const opt_name_top_field_first[]                  = {"top", NULL};
 
 __thread HWDevice *filter_hw_device;
 
-__thread char *vstats_filename;
 __thread char *sdp_filename;
 
 __thread float audio_drift_threshold = 0.1;
@@ -382,17 +380,7 @@ int opt_audio_codec(void *optctx, const char *opt, const char *arg)
     return parse_option(o, "codec:a", arg, ffmpeg_options);
 }
 
-int opt_video_codec(void *optctx, const char *opt, const char *arg)
-{
-    OptionsContext *o = optctx;
-    return parse_option(o, "codec:v", arg, ffmpeg_options);
-}
 
-int opt_subtitle_codec(void *optctx, const char *opt, const char *arg)
-{
-    OptionsContext *o = optctx;
-    return parse_option(o, "codec:s", arg, ffmpeg_options);
-}
 
 int opt_data_codec(void *optctx, const char *opt, const char *arg)
 {
@@ -885,7 +873,6 @@ int opt_target(void *optctx, const char *opt, const char *arg)
 
         parse_option(o, "s", norm == PAL ? "480x576" : "480x480", options);
         parse_option(o, "r", frame_rates[norm], options);
-        parse_option(o, "pix_fmt", "yuv420p", options);
         opt_default(NULL, "g", norm == PAL ? "15" : "18");
 
         opt_default(NULL, "b:v", "2040000");
@@ -907,7 +894,6 @@ int opt_target(void *optctx, const char *opt, const char *arg)
 
         parse_option(o, "s", norm == PAL ? "720x576" : "720x480", options);
         parse_option(o, "r", frame_rates[norm], options);
-        parse_option(o, "pix_fmt", "yuv420p", options);
         opt_default(NULL, "g", norm == PAL ? "15" : "18");
 
         opt_default(NULL, "b:v", "6000000");
@@ -926,8 +912,6 @@ int opt_target(void *optctx, const char *opt, const char *arg)
         parse_option(o, "f", "dv", options);
 
         parse_option(o, "s", norm == PAL ? "720x576" : "720x480", options);
-        parse_option(o, "pix_fmt", !strncmp(arg, "dv50", 4) ? "yuv422p" :
-                          norm == PAL ? "yuv420p" : "yuv411p", options);
         parse_option(o, "r", frame_rates[norm], options);
 
         parse_option(o, "ar", "48000", options);
@@ -944,34 +928,7 @@ int opt_target(void *optctx, const char *opt, const char *arg)
     return 0;
 }
 
-int opt_vstats_file(void *optctx, const char *opt, const char *arg)
-{
-    av_free (vstats_filename);
-    vstats_filename = av_strdup (arg);
-    return 0;
-}
 
-int opt_vstats(void *optctx, const char *opt, const char *arg)
-{
-    char filename[40];
-    time_t today2 = time(NULL);
-    struct tm *today = localtime(&today2);
-
-    if (!today) { // maybe tomorrow
-        av_log(NULL, AV_LOG_FATAL, "Unable to get current time: %s\n", strerror(errno));
-        exit_program(1);
-    }
-
-    snprintf(filename, sizeof(filename), "vstats_%02d%02d%02d.log", today->tm_hour, today->tm_min,
-             today->tm_sec);
-    return opt_vstats_file(NULL, opt, filename);
-}
-
-int opt_video_frames(void *optctx, const char *opt, const char *arg)
-{
-    OptionsContext *o = optctx;
-    return parse_option(o, "frames:v", arg, ffmpeg_options);
-}
 
 int opt_audio_frames(void *optctx, const char *opt, const char *arg)
 {
@@ -1111,11 +1068,6 @@ int opt_profile(void *optctx, const char *opt, const char *arg)
     return 0;
 }
 
-int opt_video_filters(void *optctx, const char *opt, const char *arg)
-{
-    OptionsContext *o = optctx;
-    return parse_option(o, "filter:v", arg, ffmpeg_options);
-}
 
 int opt_audio_filters(void *optctx, const char *opt, const char *arg)
 {
@@ -1123,26 +1075,7 @@ int opt_audio_filters(void *optctx, const char *opt, const char *arg)
     return parse_option(o, "filter:a", arg, ffmpeg_options);
 }
 
-int opt_vsync(void *optctx, const char *opt, const char *arg)
-{
-    av_log(NULL, AV_LOG_WARNING, "-vsync is deprecated. Use -fps_mode\n");
-    parse_and_set_vsync(arg, &video_sync_method, -1, -1, 1);
-    return 0;
-}
 
-int opt_timecode(void *optctx, const char *opt, const char *arg)
-{
-    OptionsContext *o = optctx;
-    int ret;
-    char *tcr = av_asprintf("timecode=%s", arg);
-    if (!tcr)
-        return AVERROR(ENOMEM);
-    ret = parse_option(o, "metadata:g", tcr, ffmpeg_options);
-    if (ret >= 0)
-        ret = av_dict_set(&o->g->codec_opts, "gop_timecode", arg, 0);
-    av_free(tcr);
-    return ret;
-}
 
 int opt_audio_qscale(void *optctx, const char *opt, const char *arg)
 {
