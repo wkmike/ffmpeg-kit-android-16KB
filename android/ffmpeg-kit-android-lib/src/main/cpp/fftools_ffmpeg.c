@@ -2554,7 +2554,7 @@ static int transcode_subtitles(InputStream *ist, const AVPacket *pkt,
     if (ret < 0 || !*got_output) {
         *decode_failed = 1;
         if (!pkt->size)
-            sub2video_flush(ist);
+            // sub2video_flush(ist);
         return ret;
     }
 
@@ -3881,7 +3881,7 @@ static int process_input(int file_index)
                av_ts2timestr(input_files[ist->file_index]->ts_offset, &AV_TIME_BASE_Q));
     }
 
-    sub2video_heartbeat(ist, pkt->pts);
+    // sub2video_heartbeat(ist, pkt->pts);
 
     process_input_packet(ist, pkt, 0);
 
